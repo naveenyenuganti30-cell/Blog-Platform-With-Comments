@@ -1,0 +1,29 @@
+{
+  "name": "pulse-blog-platform",
+  "version": "1.0.0",
+  "description": "Modern full-stack blogging platform with user authentication, rich post editor, and interactive threaded comments.",
+  "main": "server/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node --watch server/server.js",
+    "test": "node test_e2e.js"
+  },
+  "keywords": [
+    "blog",
+    "fullstack",
+    "express",
+    "sqlite",
+    "rest-api",
+    "comments"
+  ],
+  "author": "PulseBlog Team",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.5.0"
+  }
+}

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PulseBlog — Next-Gen Developer & Design Publishing Platform</title>
+  <meta name="description" content="A modern, high-performance blogging platform featuring rich editorial content, nested comments, and interactive user engagement." />
+  
+  <!-- Modern Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/css/variables.css" />
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/components.css" />
+  <link rel="stylesheet" href="/css/feed.css" />
+  <link rel="stylesheet" href="/css/article.css" />
+  <link rel="stylesheet" href="/css/comments.css" />
+  <link rel="stylesheet" href="/css/editor.css" />
+</head>
+<body>
+
+  <!-- Top Reading Progress Bar -->
+  <div class="reading-progress-container" aria-hidden="true">
+    <div class="reading-progress-bar" id="readingProgressBar"></div>
+  </div>
+
+  <!-- Site Navigation Bar -->
+  <header class="site-header">
+    <div class="app-container header-inner">
+      <!-- Brand Logo -->
+      <a href="#/" class="brand-logo" id="brandLogo">
+        <div class="brand-icon-box">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <path d="M2 17l10 5 10-5"></path>
+            <path d="M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+        <span>Pulse<span class="brand-text-accent">Blog</span></span>
+      </a>
+
+      <!-- Global Search -->
+      <div class="header-search">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="search" 
+            id="globalSearchInput" 
+            class="search-input" 
+            placeholder="Search articles, topics, or authors..." 
+            autocomplete="off" 
+          />
+          <kbd class="search-kbd">⌘K</kbd>
+        </div>
+      </div>
+
+      <!-- Action Controls -->
+      <div class="header-actions">
+        <!-- Write Post Button -->
+        <a href="#/editor" class="btn btn-primary" id="headerWriteBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          <span>Write</span>
+        </a>
+
+        <!-- Dark / Light Theme Switcher -->
+        <button class="btn-icon" id="themeToggleBtn" aria-label="Toggle dark/light theme" title="Toggle theme">
+          <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+
+        <!-- Auth State: Guest Controls -->
+        <div id="guestNavControls" class="header-actions">
+          <button class="btn btn-ghost" id="openSignInBtn">Sign In</button>
+          <button class="btn btn-secondary" id="openSignUpBtn">Get Started</button>
+        </div>
+
+        <!-- Auth State: Authenticated User Menu -->
+        <div id="userMenuWrapper" class="user-menu-wrapper" style="display: none;">
+          <button class="user-avatar-btn" id="userMenuBtn" aria-expanded="false" aria-label="User navigation menu">
+            <img id="navUserAvatar" class="user-avatar" src="" alt="User profile" />
+          </button>
+
+          <div class="dropdown-panel" id="userDropdownPanel">
+            <div class="dropdown-header">
+              <div class="dropdown-name" id="dropdownUserName">User Name</div>
+              <div class="dropdown-email" id="dropdownUserEmail">user@pulseblog.dev</div>
+            </div>
+            <a href="#/profile" class="dropdown-item" id="dropdownProfileLink">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              <span>My Profile & Posts</span>
+            </a>
+            <a href="#/bookmarks" class="dropdown-item" id="dropdownBookmarksLink">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+              <span>Saved Bookmarks</span>
+            </a>
+            <a href="#/editor" class="dropdown-item" id="dropdownNewPostLink">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              <span>Create New Article</span>
+            </a>
+            <div style="height: 1px; background: var(--border-subtle); margin: 0.25rem 0;"></div>
+            <button class="dropdown-item danger" id="dropdownLogoutBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="main-content">
+    <div class="app-container">
+
+      <!-- ===================================================================
+           VIEW 1: Feed View (Home)
+           =================================================================== -->
+      <section id="view-feed" class="view-container active">
+        <!-- Hero Spotlight Banner -->
+        <div id="heroSpotlightContainer"></div>
+
+        <div class="feed-layout">
+          <!-- Left Main Feed Column -->
+          <div class="feed-main-col">
+            <!-- Controls Bar: Category Filter Pills + Sort Dropdown -->
+            <div class="feed-controls-bar">
+              <div class="category-tabs-scroll" id="categoryTabsContainer">
+                <button class="category-tab-btn active" data-category="All">All Topics</button>
+                <button class="category-tab-btn" data-category="Artificial Intelligence">Artificial Intelligence</button>
+                <button class="category-tab-btn" data-category="Design">Design</button>
+                <button class="category-tab-btn" data-category="Engineering">Engineering</button>
+              </div>
+
+              <div class="sort-select-wrapper">
+                <span>Sort by:</span>
+                <select id="feedSortSelect" class="sort-select">
+                  <option value="latest">Latest</option>
+                  <option value="popular">Most Popular</option>
+                  <option value="comments">Most Discussed</option>
+                  <option value="views">Most Viewed</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Active Search Filter Indicator -->
+            <div id="activeFilterBadge" style="display: none; margin-bottom: 1.5rem; align-items: center; justify-content: space-between; background: var(--bg-surface); padding: 0.6rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle);">
+              <span id="activeFilterText" style="font-size: 0.88rem; color: var(--text-secondary);"></span>
+              <button id="clearFilterBtn" class="btn btn-ghost" style="padding: 0.2rem 0.5rem; font-size: 0.78rem;">Clear Filter</button>
+            </div>
+
+            <!-- Post Cards Grid -->
+            <div class="posts-grid" id="postsGrid">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <!-- Feed Pagination Controls -->
+            <div id="feedPaginationWrapper" style="display: none; justify-content: center; align-items: center; gap: 1rem; margin-top: 2.5rem;">
+              <span id="feedPaginationInfo" style="font-size: 0.85rem; color: var(--text-muted);"></span>
+              <button class="btn btn-secondary" id="feedLoadMoreBtn" style="padding: 0.6rem 1.6rem; font-weight: 700;">
+                <span>Load More Articles</span>
+              </button>
+            </div>
+
+            <!-- Feed Empty State -->
+            <div class="feed-empty-state" id="feedEmptyState" style="display: none;">
+              <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              <h3 class="empty-title">No articles match your criteria</h3>
+              <p class="empty-desc">Try searching with different keywords or switch back to "All Topics".</p>
+              <button class="btn btn-secondary" id="resetFiltersBtn">Reset Filters</button>
+            </div>
+          </div>
+
+          <!-- Right Sidebar Widgets -->
+          <aside class="feed-sidebar">
+            <!-- Platform Metrics Widget -->
+            <div class="sidebar-widget">
+              <h4 class="widget-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V10"></path><path d="M18 20V4"></path><path d="M6 20v-4"></path></svg>
+                Platform Stats
+              </h4>
+              <div class="platform-metrics-grid">
+                <div class="metric-stat-box">
+                  <div class="metric-stat-num" id="statPostsCount">3</div>
+                  <div class="metric-stat-lbl">Articles</div>
+                </div>
+                <div class="metric-stat-box">
+                  <div class="metric-stat-num" id="statCommentsCount">6</div>
+                  <div class="metric-stat-lbl">Comments</div>
+                </div>
+                <div class="metric-stat-box">
+                  <div class="metric-stat-num" id="statAuthorsCount">3</div>
+                  <div class="metric-stat-lbl">Authors</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Trending Topics Tag Cloud -->
+            <div class="sidebar-widget">
+              <h4 class="widget-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Trending Tags
+              </h4>
+              <div class="tag-cloud" id="sidebarTagCloud">
+                <span class="tag-chip" data-tag="AI">#AI</span>
+                <span class="tag-chip" data-tag="Architecture">#Architecture</span>
+                <span class="tag-chip" data-tag="CSS">#CSS</span>
+                <span class="tag-chip" data-tag="Glassmorphism">#Glassmorphism</span>
+                <span class="tag-chip" data-tag="Node.js">#Node.js</span>
+                <span class="tag-chip" data-tag="SQLite">#SQLite</span>
+                <span class="tag-chip" data-tag="UI/UX">#UI/UX</span>
+              </div>
+            </div>
+
+            <!-- Top Contributors -->
+            <div class="sidebar-widget">
+              <h4 class="widget-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                Top Contributors
+              </h4>
+              <div class="author-spotlight-list" id="sidebarTopAuthors">
+                <!-- Dynamically rendered -->
+              </div>
+            </div>
+
+            <!-- Callout Card -->
+            <div class="sidebar-widget" style="background: var(--gradient-glow); border-color: rgba(99, 102, 241, 0.3);">
+              <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; color: var(--text-primary);">Join the Pulse Community</h4>
+              <p style="font-size: 0.82rem; color: var(--text-secondary); margin-bottom: 1rem;">Share your technical insights, architectural case studies, and design patterns with thousands of readers worldwide.</p>
+              <button class="btn btn-primary" style="width: 100%;" id="sidebarJoinBtn">Start Writing Today</button>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           VIEW 2: Article Detail Reader & Discussion
+           =================================================================== -->
+      <section id="view-post" class="view-container">
+        <article class="article-container" id="articleReaderContainer">
+          <!-- Article Rendered Dynamically -->
+        </article>
+      </section>
+
+      <!-- ===================================================================
+           VIEW 3: Post Creation / Editor Suite
+           =================================================================== -->
+      <section id="view-editor" class="view-container">
+        <div class="editor-container">
+          <div class="editor-header-bar">
+            <h2 class="editor-heading-title" id="editorViewTitle">Create New Article</h2>
+            <div class="editor-header-actions">
+              <select id="editorStatusSelect" class="editor-status-select">
+                <option value="published">Published</option>
+                <option value="draft">Save as Draft</option>
+              </select>
+              <button class="btn btn-ghost" id="editorCancelBtn">Cancel</button>
+              <button class="btn btn-primary" id="editorPublishBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <span id="editorPublishBtnText">Publish Article</span>
+              </button>
+            </div>
+          </div>
+
+          <form id="postEditorForm">
+            <!-- Article Title -->
+            <input 
+              type="text" 
+              id="editorTitle" 
+              class="editor-title-input" 
+              placeholder="Title of your article..." 
+              required 
+            />
+
+            <!-- Category & Tags Grid -->
+            <div class="editor-meta-grid">
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Category</label>
+                <select id="editorCategory" class="form-control" required>
+                  <option value="Artificial Intelligence">Artificial Intelligence</option>
+                  <option value="Design">Design</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Web Development">Web Development</option>
+                  <option value="Guides">Guides</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Tags (comma separated)</label>
+                <input 
+                  type="text" 
+                  id="editorTags" 
+                  class="form-control" 
+                  placeholder="e.g. Node.js, Architecture, Frontend" 
+                />
+              </div>
+            </div>
+
+            <!-- Cover Image Selector -->
+            <div class="cover-picker-section">
+              <label class="form-label">Cover Banner Image</label>
+              <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.5rem;">Choose one of our curated high-res generated hero banners, enter an image URL, or upload your own.</p>
+              
+              <!-- Curated Generated Preset Thumbnails -->
+              <div class="cover-preset-row">
+                <div class="cover-preset-thumbnail selected" data-cover="/assets/images/tech-future.jpg">
+                  <img src="/assets/images/tech-future.jpg" alt="Futuristic Tech Cover" />
+                  <span class="cover-preset-label">Tech / AI Future</span>
+                </div>
+                <div class="cover-preset-thumbnail" data-cover="/assets/images/design-workspace.jpg">
+                  <img src="/assets/images/design-workspace.jpg" alt="Design Studio Cover" />
+                  <span class="cover-preset-label">Design Studio</span>
+                </div>
+                <div class="cover-preset-thumbnail" data-cover="/assets/images/coding-matrix.jpg">
+                  <img src="/assets/images/coding-matrix.jpg" alt="Matrix Engineering Cover" />
+                  <span class="cover-preset-label">Engineering Matrix</span>
+                </div>
+              </div>
+
+              <div class="cover-custom-inputs">
+                <input 
+                  type="url" 
+                  id="editorCoverUrl" 
+                  class="form-control" 
+                  placeholder="Or paste a custom image URL (https://...)" 
+                  value="/assets/images/tech-future.jpg"
+                />
+                <label class="btn btn-secondary" style="margin-bottom: 0; cursor: pointer;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                  <span>Upload</span>
+                  <input type="file" id="editorCoverFileInput" accept="image/*" style="display: none;" />
+                </label>
+              </div>
+            </div>
+
+            <!-- Excerpt Input -->
+            <div class="form-group">
+              <label class="form-label">Summary / Short Excerpt (Optional)</label>
+              <textarea 
+                id="editorExcerpt" 
+                class="form-control" 
+                rows="2" 
+                placeholder="A compelling 1-2 sentence overview shown on feed cards..."
+              ></textarea>
+            </div>
+
+            <!-- Markdown Toolbar & Tab Switcher -->
+            <div class="markdown-toolbar">
+              <button type="button" class="toolbar-btn" data-tool="bold" title="Bold (**text**)"><strong>B</strong></button>
+              <button type="button" class="toolbar-btn" data-tool="italic" title="Italic (*text*)"><em>I</em></button>
+              <div class="toolbar-separator"></div>
+              <button type="button" class="toolbar-btn" data-tool="h2" title="Heading 2 (## Heading)">H2</button>
+              <button type="button" class="toolbar-btn" data-tool="h3" title="Heading 3 (### Heading)">H3</button>
+              <div class="toolbar-separator"></div>
+              <button type="button" class="toolbar-btn" data-tool="quote" title="Quote (> quote)">Quote</button>
+              <button type="button" class="toolbar-btn" data-tool="code" title="Code Block (```)">Code</button>
+              <button type="button" class="toolbar-btn" data-tool="list" title="Bullet List (- item)">List</button>
+              <button type="button" class="toolbar-btn" data-tool="link" title="Link ([text](url))">Link</button>
+
+              <div class="editor-tab-switch">
+                <button type="button" class="editor-tab-btn active" id="editorWriteTab">Write</button>
+                <button type="button" class="editor-tab-btn" id="editorPreviewTab">Preview</button>
+              </div>
+            </div>
+
+            <!-- Editor Input Area -->
+            <textarea 
+              id="editorContent" 
+              class="editor-textarea" 
+              placeholder="Write your article in Markdown... Use # for headings, ``` for code blocks, and > for blockquotes." 
+              required
+            ></textarea>
+
+            <!-- Live Preview Area -->
+            <div id="editorPreviewPanel" class="editor-preview-panel article-content-body"></div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ===================================================================
+           VIEW 4: User Profile & Bookmarks View
+           =================================================================== -->
+      <section id="view-profile" class="view-container">
+        <div style="max-width: 900px; margin: 0 auto;">
+          <!-- Profile Banner Card -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-xl); padding: 2.5rem; margin-bottom: 2rem; box-shadow: var(--shadow-md); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;">
+            <div style="display: flex; align-items: center; gap: 1.5rem;">
+              <img id="profileUserAvatar" src="" alt="User avatar" style="width: 80px; height: 80px; border-radius: var(--radius-full); object-fit: cover; border: 3px solid var(--accent-primary);" />
+              <div>
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem;">
+                  <h2 id="profileUserName" style="font-size: 1.6rem; font-weight: 800;">User Name</h2>
+                  <span id="profileUserRole" class="author-role-tag author">Author</span>
+                </div>
+                <div id="profileUserHandle" style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem;">@username</div>
+                <p id="profileUserBio" style="font-size: 0.9rem; color: var(--text-secondary); max-width: 500px;">User bio description goes here.</p>
+              </div>
+            </div>
+            <button class="btn btn-secondary" id="editProfileModalTrigger">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              <span>Edit Profile</span>
+            </button>
+          </div>
+
+          <!-- Profile Tabs -->
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1.75rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.5rem; flex-wrap: wrap;">
+            <button class="category-tab-btn active" id="profileTabPosts">My Articles</button>
+            <button class="category-tab-btn" id="profileTabDrafts">My Drafts</button>
+            <button class="category-tab-btn" id="profileTabBookmarks">Saved Bookmarks</button>
+            <button class="category-tab-btn" id="profileTabSettings">Account Settings</button>
+          </div>
+
+          <!-- Profile Articles / Bookmarks / Drafts Grid -->
+          <div class="posts-grid" id="profilePostsGrid"></div>
+
+          <!-- Account Settings Container -->
+          <div id="profileSettingsContainer" style="display: none; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); padding: 2rem;">
+            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;">User Preferences & Security</h3>
+            
+            <form id="userSettingsForm">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; margin-bottom: 1.75rem;">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Theme Preference</label>
+                  <select id="settingThemeSelect" class="form-control">
+                    <option value="dark">Dark Theme (Default)</option>
+                    <option value="light">Light Theme</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: center;">
+                  <label class="form-label">Notification Preferences</label>
+                  <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.9rem; color: var(--text-secondary); margin-top: 0.4rem;">
+                    <input type="checkbox" id="settingEmailNotifications" checked style="width: 18px; height: 18px; accent-color: var(--accent-primary);" />
+                    <span>Receive email notifications for replies & mentions</span>
+                  </label>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" id="savePreferencesBtn">Save Preferences</button>
+            </form>
+
+            <hr style="border: none; border-top: 1px solid var(--border-subtle); margin: 2rem 0;" />
+
+            <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem;">Change Password</h4>
+            <form id="changePasswordForm" style="max-width: 480px;">
+              <div class="form-group">
+                <label class="form-label">Current Password</label>
+                <input type="password" id="currentPasswordInput" class="form-control" placeholder="••••••••" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label">New Password (min 6 characters)</label>
+                <input type="password" id="newPasswordInput" class="form-control" placeholder="••••••••" minlength="6" required />
+              </div>
+              <button type="submit" class="btn btn-secondary" id="changePasswordBtn">Update Password</button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- =====================================================================
+       MODAL 1: Authentication Dialog (Sign In / Register)
+       ===================================================================== -->
+  <dialog id="authModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div style="display: flex; gap: 0.75rem;">
+          <button id="authTabSignIn" class="btn btn-ghost active" style="font-weight: 700; color: var(--text-primary); border-bottom: 2px solid var(--accent-primary); border-radius: 0; padding: 0.25rem 0.5rem;">Sign In</button>
+          <button id="authTabSignUp" class="btn btn-ghost" style="font-weight: 600; color: var(--text-muted); border-radius: 0; padding: 0.25rem 0.5rem;">Create Account</button>
+        </div>
+        <button id="authModalCloseBtn" class="btn-icon" aria-label="Close dialog" style="width: 32px; height: 32px;">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Quick Demo Accounts One-Click Fill -->
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 0.85rem; margin-bottom: 1.25rem;">
+          <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.04em;">
+            ⚡ 1-Click Instant Demo Accounts:
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+            <button type="button" class="btn btn-secondary demo-fill-btn" data-email="elena@pulseblog.dev" data-pass="password123" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;">
+              👩‍🔬 Elena (Admin)
+            </button>
+            <button type="button" class="btn btn-secondary demo-fill-btn" data-email="marcus@pulseblog.dev" data-pass="password123" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;">
+              👨‍💻 Marcus (Engineer)
+            </button>
+            <button type="button" class="btn btn-secondary demo-fill-btn" data-email="sophia@pulseblog.dev" data-pass="password123" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;">
+              🎨 Sophia (Designer)
+            </button>
+          </div>
+        </div>
+
+        <!-- Sign In Form -->
+        <form id="signInForm">
+          <div class="form-group">
+            <label class="form-label">Email or Username</label>
+            <input type="text" id="signInIdentifier" class="form-control" placeholder="elena@pulseblog.dev" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" id="signInPassword" class="form-control" placeholder="••••••••" required />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;" id="signInSubmitBtn">
+            Sign In to PulseBlog
+          </button>
+        </form>
+
+        <!-- Sign Up Form -->
+        <form id="signUpForm" style="display: none;">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="signUpFullName" class="form-control" placeholder="Jane Doe" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input type="text" id="signUpUsername" class="form-control" placeholder="janedoe" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" id="signUpEmail" class="form-control" placeholder="jane@example.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password (min 6 characters)</label>
+            <input type="password" id="signUpPassword" class="form-control" placeholder="••••••••" minlength="6" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bio (Optional)</label>
+            <input type="text" id="signUpBio" class="form-control" placeholder="Software engineer & tech enthusiast" />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem;" id="signUpSubmitBtn">
+            Create Free Account
+          </button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- =====================================================================
+       MODAL 2: Edit Profile Dialog
+       ===================================================================== -->
+  <dialog id="editProfileModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Edit Profile</h3>
+        <button id="editProfileCloseBtn" class="btn-icon" aria-label="Close dialog" style="width: 32px; height: 32px;">✕</button>
+      </div>
+      <form id="editProfileForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" id="editProfileFullName" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Avatar URL</label>
+            <input type="url" id="editProfileAvatarUrl" class="form-control" placeholder="https://..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bio</label>
+            <textarea id="editProfileBio" class="form-control" rows="3"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-ghost" id="editProfileCancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- =====================================================================
+       MODAL 3: Delete Confirmation Dialog
+       ===================================================================== -->
+  <dialog id="deleteModal">
+    <div class="modal-card" style="max-width: 400px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="deleteModalTitle">Confirm Delete</h3>
+        <button id="deleteModalCloseBtn" class="btn-icon" style="width: 32px; height: 32px;">✕</button>
+      </div>
+      <div class="modal-body">
+        <p id="deleteModalMessage" style="color: var(--text-secondary); font-size: 0.95rem;">Are you sure you want to delete this item? This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" id="deleteCancelBtn">Cancel</button>
+        <button type="button" class="btn btn-danger" id="deleteConfirmBtn">Delete</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- =====================================================================
+       MODAL 4: Share Dialog
+       ===================================================================== -->
+  <dialog id="shareModal">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Share Article</h3>
+        <button id="shareModalCloseBtn" class="btn-icon" style="width: 32px; height: 32px;">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Article Link</label>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="shareUrlInput" class="form-control" readonly />
+            <button class="btn btn-primary" id="copyShareUrlBtn">Copy</button>
+          </div>
+        </div>
+        <div style="display: flex; gap: 0.5rem; justify-content: center; margin-top: 1.5rem;">
+          <a href="#" target="_blank" class="btn btn-secondary" id="shareTwitterBtn">Twitter / X</a>
+          <a href="#" target="_blank" class="btn btn-secondary" id="shareLinkedInBtn">LinkedIn</a>
+          <a href="#" target="_blank" class="btn btn-secondary" id="shareWhatsAppBtn">WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Dynamic Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Application Entry Point Script -->
+  <script type="module" src="/js/app.js"></script>
+</body>
+</html>
